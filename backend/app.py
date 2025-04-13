@@ -48,7 +48,7 @@ swagger = Swagger(app)
 # Configure CORS
 CORS(app, resources={
     r"/*": {
-        "origins": ["http://localhost:4200","https://taskmateangular.vercel.app/login"],
+        "origins": ["http://localhost:4200","https://taskmateangular.vercel.app"],
         "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         "allow_headers": ["Content-Type", "Authorization"],
         "supports_credentials": True,
