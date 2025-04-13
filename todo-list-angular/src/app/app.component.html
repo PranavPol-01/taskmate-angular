@@ -1,0 +1,24 @@
+<div class="_container">
+  <app-header></app-header>
+
+  <main>
+    <ng-container class="row" *ngIf="tasks.length === 0">
+      <app-task [task]=""></app-task>
+    </ng-container>
+    <ng-container class="row">
+      <ng-container *ngFor="let task of tasks">
+        <app-task [task]="task"></app-task>
+
+        <app-task-modal
+          [task]="task"
+          (choreEmitter)="addTask($event)"
+          (editEmitter)="editTask($event, task._id)"
+          (deleteEmitter)="deleteTask($event, task._id)"
+        ></app-task-modal>
+      </ng-container>
+    </ng-container>
+    <app-task-modal (choreEmitter)="addTask($event)"></app-task-modal>
+  </main>
+
+  <!-- <span class="navbar-toggler-icon"></span> -->
+</div>

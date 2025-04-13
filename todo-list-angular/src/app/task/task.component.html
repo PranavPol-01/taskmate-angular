@@ -1,0 +1,57 @@
+<div class="task">
+  <ng-container *ngIf="!task">
+    <span class="text-center w-100">No tasks for this day yet</span>
+  </ng-container>
+  <ng-container *ngIf="task">
+    <!-- Check Button -->
+    <button class="task-check-icon" (click)="toggleTaskStatus()">
+      <i
+        [ngClass]="
+          task.completed ? 'fa-solid fa-circle-check' : 'fa-regular fa-circle'
+        "
+      ></i>
+    </button>
+
+    <!-- Task Info -->
+    <div class="task-info">
+      <h2 [ngClass]="task.completed ? 'task-completed' : ''">
+        {{ task.title }}
+      </h2>
+      <div>
+        <div [ngClass]="isTaskLate() ? 'task-late' : ''">
+          <i class="fa-regular fa-clock"></i>
+          <span>
+            {{
+              task.dueHour.toLocaleString("en-US", {
+                hour: "2-digit",
+                minute: "2-digit",
+              })
+            }}
+          </span>
+        </div>
+        <i class="fa-solid fa-circle separator"></i>
+        <span>{{ task.category }}</span>
+      </div>
+    </div>
+
+    <!-- Edit/Delete Buttons -->
+    <div class="task-btns">
+      <button
+        class="task-btn-edit"
+        data-bs-toggle="modal"
+        [attr.data-bs-target]="taskId + '_edit'"
+        title="Edit task"
+      >
+        <i class="fa-solid fa-pen"></i>
+      </button>
+      <button
+        class="task-btn-delete"
+        data-bs-toggle="modal"
+        title="Remove task"
+        [attr.data-bs-target]="taskId + '_delete'"
+      >
+        <i class="fa-solid fa-trash"></i>
+      </button>
+    </div>
+  </ng-container>
+</div>

@@ -1,0 +1,38 @@
+h1,
+h2,
+h3,
+p,
+span {
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --primary: #2196f3;
+  --secondary: #ff9800;
+
+  --background: #121212;
+  --background-light: #dfdfdf;
+  --surface: #b8b8b8;
+
+  --text: #ffffff;
+  --text-secondary: #979797;
+  --text-dark: #363636;
+
+  --accent: #ff4081;
+  --success: #4caf50;
+  --warning: #ffc107;
+  --error: #f44336;
+
+  --border: #333333;
+  --divider: #757575;
+
+  --info: #2196f3;
+  --disabled: #616161;
+}
+
+button {
+  border: none;
+  background: none;
+  padding: 0;
+}

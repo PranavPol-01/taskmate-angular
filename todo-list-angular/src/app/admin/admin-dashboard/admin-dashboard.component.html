@@ -1,0 +1,84 @@
+<div class="admin-dashboard">
+  <div class="header">
+    <h1>Admin Dashboard</h1>
+    <div class="actions">
+      <button class="btn btn-primary" (click)="navigateToCreateTask()">
+        Create Task
+      </button>
+      <button class="btn btn-secondary" (click)="navigateToAnalytics()">
+        Analytics
+      </button>
+    </div>
+  </div>
+
+  <div class="error-message" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <div class="task-stats" *ngIf="!loading">
+    <div class="stat-card">
+      <h3>Total Tasks</h3>
+      <p>{{ taskStats.total }}</p>
+    </div>
+    <div class="stat-card">
+      <h3>Completed Tasks</h3>
+      <p>{{ taskStats.completed }}</p>
+    </div>
+    <div class="stat-card">
+      <h3>Pending Tasks</h3>
+      <p>{{ taskStats.pending }}</p>
+    </div>
+  </div>
+
+  <div class="filters" *ngIf="!loading">
+    <select [(ngModel)]="statusFilter" (change)="loadTasks()">
+      <option value="all">All Status</option>
+      <option value="todo">To Do</option>
+      <option value="in_progress">In Progress</option>
+      <option value="done">Done</option>
+    </select>
+
+    <select [(ngModel)]="priorityFilter" (change)="loadTasks()">
+      <option value="all">All Priority</option>
+      <option value="low">Low</option>
+      <option value="medium">Medium</option>
+      <option value="high">High</option>
+    </select>
+  </div>
+
+  <div class="task-list" *ngIf="!loading">
+    <div class="task-card" *ngFor="let task of filteredTasks">
+      <h3>{{ task.title }}</h3>
+      <p>{{ task.description }}</p>
+
+      <div class="task-details">
+        <span class="status" [ngClass]="task.status">
+          {{ task.status | titlecase }}
+        </span>
+        <span class="priority" [ngClass]="task.priority">
+          {{ task.priority | titlecase }}
+        </span>
+        <span class="due-date"> Due: {{ formatDate(task.due_date) }} </span>
+      </div>
+
+      <div class="assigned-to">
+        <strong>Assigned to:</strong> {{ task.assigned_to_name }}
+      </div>
+
+      <div class="task-actions">
+        <button class="btn btn-edit" (click)="editTask(task)">Edit</button>
+        <button class="btn btn-delete" (click)="deleteTask(task._id)">
+          Delete
+        </button>
+      </div>
+    </div>
+
+    <div class="empty-state" *ngIf="filteredTasks.length === 0">
+      <p>No tasks found matching the selected filters.</p>
+    </div>
+  </div>
+
+  <div class="loading" *ngIf="loading">
+    <p>Loading tasks...</p>
+  </div>
+</div>

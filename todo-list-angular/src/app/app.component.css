@@ -1,0 +1,33 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: flex-start;
+  min-width: 100vw;
+  max-height: 100vh;
+  margin: 0 auto;
+  padding: 1.5rem;
+  padding-bottom: 0;
+  background-image: url("/assets/images/background-tech.jpg");
+  background-position: center;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+._container {
+  width: min(678px, 100%);
+  margin: 0 auto;
+  height: 100vh;
+  max-height: 100vh;
+  overflow-y: hidden;
+}
+
+main {
+  margin-top: 1rem;
+  overflow-y: scroll;
+  height: 80%;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}

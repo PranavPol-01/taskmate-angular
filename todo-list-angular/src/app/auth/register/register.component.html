@@ -1,0 +1,117 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h2 class="card-title text-center">Register</h2>
+          <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+            <div class="mb-3">
+              <label for="username" class="form-label">Username</label>
+              <input
+                type="text"
+                class="form-control"
+                id="username"
+                formControlName="username"
+              />
+              <div
+                *ngIf="username.invalid && (username.dirty || username.touched)"
+                class="text-danger"
+              >
+                <div *ngIf="username.errors?.['required']">
+                  Username is required
+                </div>
+                <div *ngIf="username.errors?.['minlength']">
+                  Username must be at least 3 characters
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input
+                type="email"
+                class="form-control"
+                id="email"
+                formControlName="email"
+              />
+              <div
+                *ngIf="email.invalid && (email.dirty || email.touched)"
+                class="text-danger"
+              >
+                <div *ngIf="email.errors?.['required']">Email is required</div>
+                <div *ngIf="email.errors?.['email']">
+                  Please enter a valid email
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="password" class="form-label">Password</label>
+              <input
+                type="password"
+                class="form-control"
+                id="password"
+                formControlName="password"
+              />
+              <div
+                *ngIf="password.invalid && (password.dirty || password.touched)"
+                class="text-danger"
+              >
+                <div *ngIf="password.errors?.['required']">
+                  Password is required
+                </div>
+                <div *ngIf="password.errors?.['minlength']">
+                  Password must be at least 6 characters
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="company_code" class="form-label">Company Code</label>
+              <input
+                type="text"
+                class="form-control"
+                id="company_code"
+                formControlName="company_code"
+              />
+              <div
+                *ngIf="
+                  company_code.invalid &&
+                  (company_code.dirty || company_code.touched)
+                "
+                class="text-danger"
+              >
+                <div *ngIf="company_code.errors?.['required']">
+                  Company code is required
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="role" class="form-label">Role</label>
+              <select class="form-control" id="role" formControlName="role">
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+              </select>
+            </div>
+
+            <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+            <div class="d-grid">
+              <button
+                type="submit"
+                class="btn btn-primary"
+                [disabled]="registerForm.invalid || loading"
+              >
+                {{ loading ? "Registering..." : "Register" }}
+              </button>
+            </div>
+          </form>
+          <div class="text-center mt-3">
+            <p>Already have an account? <a routerLink="/login">Login</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
