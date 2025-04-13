@@ -423,8 +423,8 @@ def update_task(task_id):
         )
         
         # Get updated task
-        updated_task = tasks_collection.find_one({'_id': ObjectId(task_id)})
-        updated_task['_id'] = str(updated_task['_id'])
+            updated_task = tasks_collection.find_one({'_id': ObjectId(task_id)})
+            updated_task['_id'] = str(updated_task['_id'])
         if 'created_by' in updated_task:
             updated_task['created_by'] = str(updated_task['created_by'])
         if 'assigned_to' in updated_task:
