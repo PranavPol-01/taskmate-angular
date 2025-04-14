@@ -48,7 +48,7 @@ swagger = Swagger(app)
 # Configure CORS
 CORS(app, resources={
     r"/*": {
-        "origins": ["http://localhost:4200","https://taskmateangular.vercel.app"],
+        "origins": ["http://localhost:4200", "https://taskmateangular.vercel.app"],
         "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         "allow_headers": ["Content-Type", "Authorization"],
         "supports_credentials": True,
@@ -391,7 +391,10 @@ def update_task(task_id):
         if not user:
             return jsonify({'error': 'User not found'}), 404
         
-        if user['role'] != 'admin' and str(task['created_by']) != str(user['_id']):
+        # Allow update if user is admin, task creator, or assigned user
+        if (user['role'] != 'admin' and 
+            str(task['created_by']) != str(user['_id']) and 
+            str(task.get('assigned_to')) != str(user['_id'])):
             return jsonify({'error': 'Unauthorized to update this task'}), 403
         
         # Update task fields
@@ -597,7 +600,11 @@ def get_completed_tasks():
             # Regular users can only see completed tasks assigned to them
             tasks = list(tasks_collection.find({
                 'company_code': user['company_code'],
-                'assigned_to': str(user['_id']),
+                # 'assigned_to': str(user['_id']),
+                '$or': [
+                    {'created_by': str(user['_id'])},
+                    {'assigned_to': str(user['_id'])}
+                ],
                 'status': 'done'
             }))
         
@@ -908,6 +915,42 @@ def get_admin_company_employees():
         return jsonify(employees), 200
     except Exception as e:
         logger.error(f"Error in get_company_employees: {e}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/admin/tasks/<task_id>', methods=['DELETE'])
+@jwt_required()
+def admin_delete_task(task_id):
+    try:
+        logger.info(f"Attempting to delete task with ID: {task_id}")
+        
+        current_user = get_jwt_identity()
+        user = users_collection.find_one({'_id': ObjectId(current_user)})
+        
+        if not user or user['role'] != 'admin':
+            logger.error(f"Unauthorized delete attempt by user: {current_user}")
+            return jsonify({'error': 'Unauthorized'}), 403
+        
+        # Get the task
+        task = tasks_collection.find_one({'_id': ObjectId(task_id)})
+        if not task:
+            logger.error(f"Task not found: {task_id}")
+            return jsonify({'error': 'Task not found'}), 404
+        
+        # Verify task belongs to admin's company
+        if task['company_code'] != user['company_code']:
+            logger.error(f"Task company code mismatch: {task['company_code']} != {user['company_code']}")
+            return jsonify({'error': 'Unauthorized to delete this task'}), 403
+        
+        # Delete the task
+        result = tasks_collection.delete_one({'_id': ObjectId(task_id)})
+        
+        if result.deleted_count:
+            logger.info(f"Successfully deleted task: {task_id}")
+            return jsonify({'message': 'Task deleted successfully'}), 200
+        logger.error(f"Failed to delete task: {task_id}")
+        return jsonify({'error': 'Task not found'}), 404
+    except Exception as e:
+        logger.error(f"Error in admin_delete_task: {str(e)}")
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':

@@ -19,6 +19,7 @@ import { NgChartsModule } from 'ng2-charts';
 import { AnalyticsComponent } from './analytics/analytics.component';
 import { ProfileComponent } from './profile/profile.component';
 import { AdminLoginComponent } from './auth/admin-login/admin-login.component';
+import { LandingPageComponent } from './landing-page/landing-page.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -66,5 +67,6 @@ const routes: Routes = [
       multi: true,
     },
   ],
+  declarations: [LandingPageComponent],
 })
 export class AppModule {}

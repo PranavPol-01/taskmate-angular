@@ -83,10 +83,23 @@ export class TaskService {
     );
   }
 
-  deleteTask(id: string): Observable<void> {
-    return this.http.delete<void>(
-      `${this.apiUrl}/tasks/${id}`,
-      this.getRequestOptions()
+  deleteTask(id: string, isAdmin: boolean = false): Observable<void> {
+    const endpoint = isAdmin
+      ? `${this.apiUrl}/admin/tasks/${id}`
+      : `${this.apiUrl}/tasks/${id}`;
+    console.log('Deleting task with endpoint:', endpoint);
+
+    const options = this.getRequestOptions();
+    console.log('Request options:', options);
+
+    return this.http.delete<void>(endpoint, options).pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.error('Delete task error:', error);
+        if (error.status === 401) {
+          this.authService.logout();
+        }
+        return throwError(() => error);
+      })
     );
   }
 

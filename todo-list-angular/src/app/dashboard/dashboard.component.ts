@@ -11,18 +11,28 @@ import { TaskService } from '../services/task.service';
 import { AuthService } from '../auth/auth.service';
 import { Task, CreateTask } from '../models/tasks.model';
 import { RouterLink, Router } from '@angular/router';
+import { trigger, transition, style, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink],
+  animations: [
+    trigger('fadeInOut', [
+      transition(':enter', [
+        style({ opacity: 0 }),
+        animate('300ms', style({ opacity: 1 })),
+      ]),
+      transition(':leave', [animate('300ms', style({ opacity: 0 }))]),
+    ]),
+  ],
   template: `
     <div class="dashboard-container">
       <header class="app-header">
         <div class="header-content">
           <div class="logo-area">
             <i class="fas fa-tasks logo-icon"></i>
-            <h1>TaskMaster</h1>
+            <h1>TaskMate</h1>
           </div>
           <div class="nav-links">
             <a routerLink="/analytics" class="nav-link">

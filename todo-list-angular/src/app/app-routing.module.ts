@@ -13,10 +13,13 @@ import { AdminTaskDetailsComponent } from './admin/admin-task-details/admin-task
 import { ProfileComponent } from './profile/profile.component';
 import { CompleteRegistrationComponent } from './auth/complete-registration/complete-registration.component';
 import { CreateTaskComponent } from './admin/create-task/create-task.component';
+import { LandingPageComponent } from './landing-page/landing-page.component';
 
 export const routes: Routes = [
   // Public routes
   { path: '', redirectTo: '/login', pathMatch: 'full' },
+
+  // { path: '', component: LandingPageComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'complete-registration', component: CompleteRegistrationComponent },
