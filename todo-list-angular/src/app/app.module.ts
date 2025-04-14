@@ -42,6 +42,16 @@ const routes: Routes = [
 ];
 
 @NgModule({
+  declarations: [
+    HeaderComponent,
+    LoginComponent,
+    RegisterComponent,
+    DashboardComponent,
+    AnalyticsComponent,
+    ProfileComponent,
+    AdminLoginComponent,
+    LandingPageComponent,
+  ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -53,10 +63,6 @@ const routes: Routes = [
     ToastrModule.forRoot(),
     DragDropModule,
     NgChartsModule,
-    HeaderComponent,
-    LoginComponent,
-    RegisterComponent,
-    DashboardComponent,
     AppRoutingModule,
   ],
   providers: [
@@ -67,6 +73,6 @@ const routes: Routes = [
       multi: true,
     },
   ],
-  declarations: [LandingPageComponent],
+  bootstrap: [AppComponent],
 })
 export class AppModule {}
