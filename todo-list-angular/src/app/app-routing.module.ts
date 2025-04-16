@@ -17,9 +17,10 @@ import { LandingPageComponent } from './landing-page/landing-page.component';
 
 export const routes: Routes = [
   // Public routes
-  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  // { path: '', redirectTo: '/login', pathMatch: 'full' },
 
-  // { path: '', component: LandingPageComponent },
+  { path: '', component: LandingPageComponent },
+  { path: 'landing-page', component: LandingPageComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'complete-registration', component: CompleteRegistrationComponent },

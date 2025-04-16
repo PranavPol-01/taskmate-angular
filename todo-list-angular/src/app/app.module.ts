@@ -39,6 +39,7 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   { path: 'admin/login', component: AdminLoginComponent },
+  { path: 'landing-page', component: LandingPageComponent },
 ];
 
 @NgModule({

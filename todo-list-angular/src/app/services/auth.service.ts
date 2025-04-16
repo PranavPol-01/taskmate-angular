@@ -80,7 +80,8 @@ export class AuthService {
     username: string,
     email: string,
     password: string,
-    role: string
+    role: string,
+    company_code: string
   ): Observable<RegisterResponse> {
     return this.http.post<RegisterResponse>(
       `${this.apiUrl}/auth/register`,
@@ -89,6 +90,7 @@ export class AuthService {
         email,
         password,
         role,
+        company_code,
       },
       { withCredentials: true }
     );
@@ -160,16 +162,15 @@ export class AuthService {
       .post<LoginResponse>(
         `${this.apiUrl}/admin/login`,
         { username, password },
-        
+
         { withCredentials: true }
       )
       .pipe(
         tap((response) => {
-         
-            localStorage.setItem('token', response.access_token);
-            localStorage.setItem('user', JSON.stringify(response.user));
-            this.currentUserSubject.next(response.user);
-            console.log(this.currentUserSubject.value?.role);
+          localStorage.setItem('token', response.access_token);
+          localStorage.setItem('user', JSON.stringify(response.user));
+          this.currentUserSubject.next(response.user);
+          console.log(this.currentUserSubject.value?.role);
         }),
         catchError((error) => {
           console.error('Admin login error:', error);

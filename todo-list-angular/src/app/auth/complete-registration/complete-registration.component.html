@@ -4,6 +4,10 @@
       <div class="card">
         <div class="card-body">
           <h2 class="card-title text-center">Complete Registration</h2>
+          <p class="text-center">
+            Please provide your company information to complete registration
+          </p>
+
           <form [formGroup]="completeForm" (ngSubmit)="onSubmit()">
             <div class="mb-3">
               <label for="company_code" class="form-label">Company Code</label>
@@ -12,14 +16,14 @@
                 class="form-control"
                 id="company_code"
                 formControlName="company_code"
+                [ngClass]="{
+                  'is-invalid':
+                    submitted && completeForm.get('company_code')?.invalid
+                }"
               />
               <div
-                *ngIf="
-                  completeForm.get('company_code')?.invalid &&
-                  (completeForm.get('company_code')?.dirty ||
-                    completeForm.get('company_code')?.touched)
-                "
-                class="text-danger"
+                *ngIf="submitted && completeForm.get('company_code')?.invalid"
+                class="invalid-feedback"
               >
                 <div
                   *ngIf="completeForm.get('company_code')?.errors?.['required']"
@@ -29,43 +33,45 @@
               </div>
             </div>
 
-            <div class="mb-3" *ngIf="isAdmin">
+            <div *ngIf="isAdmin" class="mb-3">
               <label for="company_name" class="form-label">Company Name</label>
               <input
                 type="text"
                 class="form-control"
                 id="company_name"
                 formControlName="company_name"
+                [ngClass]="{
+                  'is-invalid':
+                    submitted && completeForm.get('company_name')?.invalid
+                }"
               />
               <div
-                *ngIf="
-                  completeForm.get('company_name')?.invalid &&
-                  (completeForm.get('company_name')?.dirty ||
-                    completeForm.get('company_name')?.touched)
-                "
-                class="text-danger"
+                *ngIf="submitted && completeForm.get('company_name')?.invalid"
+                class="invalid-feedback"
               >
                 <div
                   *ngIf="completeForm.get('company_name')?.errors?.['required']"
                 >
-                  Company name is required for admin registration
+                  Company name is required for admin users
                 </div>
               </div>
             </div>
 
-            <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+            <div *ngIf="errorMessage" class="alert alert-danger">
+              {{ errorMessage }}
+            </div>
 
             <div class="d-grid">
               <button
                 type="submit"
                 class="btn btn-primary"
-                [disabled]="completeForm.invalid || loading"
+                [disabled]="completeForm.invalid || isLoading"
               >
-                {{
-                  loading
-                    ? "Completing Registration..."
-                    : "Complete Registration"
-                }}
+                <span
+                  *ngIf="isLoading"
+                  class="spinner-border spinner-border-sm me-2"
+                ></span>
+                {{ isLoading ? "Completing..." : "Complete Registration" }}
               </button>
             </div>
           </form>

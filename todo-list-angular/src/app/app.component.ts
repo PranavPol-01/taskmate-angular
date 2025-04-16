@@ -14,11 +14,7 @@ import { CreateTask, Task } from './models/tasks.model';
     </div>
   `,
   styles: [
-    `
-      .container {
-        padding: 20px;
-      }
-    `,
+    
   ],
   standalone: true,
   imports: [CommonModule, RouterOutlet],
@@ -47,6 +43,8 @@ export class AppComponent implements OnInit {
           '/register',
           '/admin/login',
           '/complete-registration',
+          '/',
+          '/landing-page',
         ];
 
         // Check if the current route is protected and user is not authenticated

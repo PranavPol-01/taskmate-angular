@@ -1,0 +1,77 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h2 class="card-title text-center mb-4">Verify Your Account</h2>
+          <p class="text-center mb-4">
+            We've sent a verification code to {{ email }}
+          </p>
+
+          <form [formGroup]="verifyForm" (ngSubmit)="onSubmit()">
+            <div class="mb-3">
+              <label for="code" class="form-label">Verification Code</label>
+              <input
+                type="text"
+                class="form-control"
+                id="code"
+                formControlName="code"
+                [ngClass]="{
+                  'is-invalid': submitted && verifyForm.get('code')?.errors
+                }"
+                placeholder="Enter 6-digit code"
+              />
+              <div
+                class="invalid-feedback"
+                *ngIf="submitted && verifyForm.get('code')?.errors?.['required']"
+              >
+                Verification code is required
+              </div>
+              <div
+                class="invalid-feedback"
+                *ngIf="submitted && verifyForm.get('code')?.errors?.['minlength']"
+              >
+                Code must be 6 digits
+              </div>
+              <div
+                class="invalid-feedback"
+                *ngIf="submitted && verifyForm.get('code')?.errors?.['maxlength']"
+              >
+                Code must be 6 digits
+              </div>
+            </div>
+
+            <div class="d-grid gap-2">
+              <button
+                type="submit"
+                class="btn btn-primary"
+                [disabled]="isLoading"
+              >
+                <span
+                  *ngIf="isLoading"
+                  class="spinner-border spinner-border-sm me-2"
+                ></span>
+                Verify Account
+              </button>
+            </div>
+
+            <div class="text-center mt-3">
+              <button
+                type="button"
+                class="btn btn-link"
+                (click)="resendCode()"
+                [disabled]="isLoading"
+              >
+                Resend Code
+              </button>
+            </div>
+
+            <div *ngIf="errorMessage" class="alert alert-danger mt-3">
+              {{ errorMessage }}
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

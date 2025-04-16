@@ -4,6 +4,7 @@ import { TaskService } from '../services/task.service';
 import { Chart, ChartConfiguration } from 'chart.js';
 import { NgChartsModule } from 'ng2-charts';
 import { RouterLink } from '@angular/router';
+import { saveAs } from 'file-saver';
 
 interface MonthlyCompletion {
   month: string;
@@ -160,10 +161,10 @@ interface MonthlyCompletion {
       </div>
 
       <div class="export-section">
-        <button class="btn-export">
+        <button class="btn-export" (click)="exportAnalytics()">
           <i class="fas fa-download"></i> Export Analytics
         </button>
-        <button class="btn-print">
+        <button class="btn-print" (click)="printReport()">
           <i class="fas fa-print"></i> Print Report
         </button>
       </div>
@@ -608,5 +609,298 @@ export class AnalyticsComponent implements OnInit {
     return Math.round(
       (this.statusChartData.datasets[0].data[2] / totalTasks) * 100
     );
+  }
+
+  exportAnalytics() {
+    const analyticsData = {
+      statusDistribution: this.statusChartData,
+      priorityDistribution: this.priorityChartData,
+      completionTrend: this.completionChartData,
+      metrics: {
+        averageCompletionTime: this.averageCompletionTime,
+        totalTasksCompleted: this.totalTasksCompleted,
+        completionRate: this.calculateCompletionRate(),
+      },
+    };
+
+    const blob = new Blob([JSON.stringify(analyticsData, null, 2)], {
+      type: 'application/json',
+    });
+    saveAs(
+      blob,
+      `analytics-report-${new Date().toISOString().split('T')[0]}.json`
+    );
+  }
+
+  printReport() {
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) return;
+
+    const analyticsData = {
+      statusDistribution: this.statusChartData,
+      priorityDistribution: this.priorityChartData,
+      completionTrend: this.completionChartData,
+      metrics: {
+        averageCompletionTime: this.averageCompletionTime,
+        totalTasksCompleted: this.totalTasksCompleted,
+        completionRate: this.calculateCompletionRate(),
+      },
+    };
+
+    const printContent = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>Task Analytics Report</title>
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+            
+            body {
+              font-family: 'Roboto', sans-serif;
+              margin: 0;
+              padding: 40px;
+              color: #333;
+              background: #fff;
+            }
+            
+            .report-header {
+              text-align: center;
+              margin-bottom: 40px;
+              padding-bottom: 20px;
+              border-bottom: 2px solid #eee;
+            }
+            
+            .report-title {
+              font-size: 28px;
+              font-weight: 700;
+              color: #2c3e50;
+              margin: 0;
+            }
+            
+            .report-date {
+              color: #666;
+              font-size: 14px;
+              margin-top: 10px;
+            }
+            
+            .metrics-section {
+              display: grid;
+              grid-template-columns: repeat(3, 1fr);
+              gap: 20px;
+              margin-bottom: 40px;
+            }
+            
+            .metric-card {
+              background: #f8f9fa;
+              padding: 20px;
+              border-radius: 8px;
+              text-align: center;
+              box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            }
+            
+            .metric-value {
+              font-size: 24px;
+              font-weight: 700;
+              color: #2c3e50;
+              margin: 10px 0;
+            }
+            
+            .metric-label {
+              color: #666;
+              font-size: 14px;
+            }
+            
+            .chart-section {
+              margin-bottom: 40px;
+            }
+            
+            .chart-container {
+              background: #fff;
+              padding: 20px;
+              border-radius: 8px;
+              box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+              margin-bottom: 30px;
+            }
+            
+            .chart-title {
+              font-size: 18px;
+              font-weight: 500;
+              color: #2c3e50;
+              margin-bottom: 20px;
+              padding-bottom: 10px;
+              border-bottom: 1px solid #eee;
+            }
+            
+            .chart-wrapper {
+              height: 300px;
+              margin: 0 auto;
+            }
+            
+            @media print {
+              body {
+                padding: 20px;
+              }
+              
+              .metric-card {
+                box-shadow: none;
+                border: 1px solid #eee;
+              }
+              
+              .chart-container {
+                box-shadow: none;
+                border: 1px solid #eee;
+                page-break-inside: avoid;
+              }
+            }
+          </style>
+        </head>
+        <body>
+          <div class="report-header">
+            <h1 class="report-title">Task Analytics Report</h1>
+            <div class="report-date">Generated on ${new Date().toLocaleDateString()}</div>
+          </div>
+          
+          <div class="metrics-section">
+            <div class="metric-card">
+              <div class="metric-value">${
+                analyticsData.metrics.totalTasksCompleted
+              }</div>
+              <div class="metric-label">Total Tasks Completed</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-value">${
+                analyticsData.metrics.averageCompletionTime
+              }</div>
+              <div class="metric-label">Average Completion Time</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-value">${
+                analyticsData.metrics.completionRate
+              }%</div>
+              <div class="metric-label">Completion Rate</div>
+            </div>
+          </div>
+          
+          <div class="chart-section">
+            <div class="chart-container">
+              <h2 class="chart-title">Task Status Distribution</h2>
+              <div class="chart-wrapper">
+                <canvas id="statusChart"></canvas>
+              </div>
+            </div>
+            
+            <div class="chart-container">
+              <h2 class="chart-title">Task Priority Distribution</h2>
+              <div class="chart-wrapper">
+                <canvas id="priorityChart"></canvas>
+              </div>
+            </div>
+            
+            <div class="chart-container">
+              <h2 class="chart-title">Task Completion Trend</h2>
+              <div class="chart-wrapper">
+                <canvas id="completionChart"></canvas>
+              </div>
+            </div>
+          </div>
+          
+          <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+          <script>
+            window.onload = function() {
+              // Status Chart
+              new Chart(document.getElementById('statusChart'), {
+                type: 'pie',
+                data: ${JSON.stringify(analyticsData.statusDistribution)},
+                options: {
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  plugins: {
+                    legend: {
+                      position: 'bottom',
+                      labels: {
+                        padding: 20,
+                        font: {
+                          size: 12
+                        }
+                      }
+                    }
+                  }
+                }
+              });
+
+              // Priority Chart
+              new Chart(document.getElementById('priorityChart'), {
+                type: 'bar',
+                data: ${JSON.stringify(analyticsData.priorityDistribution)},
+                options: {
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  scales: {
+                    y: {
+                      beginAtZero: true,
+                      grid: {
+                        color: 'rgba(0,0,0,0.05)'
+                      }
+                    },
+                    x: {
+                      grid: {
+                        display: false
+                      }
+                    }
+                  },
+                  plugins: {
+                    legend: {
+                      display: false
+                    }
+                  }
+                }
+              });
+
+              // Completion Chart
+              new Chart(document.getElementById('completionChart'), {
+                type: 'line',
+                data: ${JSON.stringify(analyticsData.completionTrend)},
+                options: {
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  scales: {
+                    y: {
+                      beginAtZero: true,
+                      grid: {
+                        color: 'rgba(0,0,0,0.05)'
+                      }
+                    },
+                    x: {
+                      grid: {
+                        display: false
+                      }
+                    }
+                  },
+                  plugins: {
+                    legend: {
+                      position: 'bottom',
+                      labels: {
+                        padding: 20,
+                        font: {
+                          size: 12
+                        }
+                      }
+                    }
+                  }
+                }
+              });
+
+              // Automatically trigger print dialog after charts are rendered
+              setTimeout(() => {
+                window.print();
+              }, 1000);
+            };
+          </script>
+        </body>
+      </html>
+    `;
+
+    printWindow.document.write(printContent);
+    printWindow.document.close();
   }
 }

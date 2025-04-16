@@ -1,14 +1,14 @@
-h1,
+/* h1,
 h2,
 h3,
 p,
 span {
   margin: 0;
   padding: 0;
-}
+} */
 
 :root {
-  --primary: #2196f3;
+  /* --primary: #2196f3;
   --secondary: #ff9800;
 
   --background: #121212;
@@ -28,11 +28,22 @@ span {
   --divider: #757575;
 
   --info: #2196f3;
-  --disabled: #616161;
-}
+  --disabled: #616161; */
+  --primary: #3a57ff;
+  --primary-dark: #0026ff;
+  --primary-light: #d1d8ff;
+  --accent: #ff3a8c;
+  --dark: #1a1e36;
+  --light: #f8faff;
+  --gray: #8a93b5;
+  --success: #00d37f;
+  --warning: #ffbe0b;
 
+  --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+/* 
 button {
   border: none;
   background: none;
   padding: 0;
-}
+} */
